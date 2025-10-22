@@ -209,34 +209,83 @@ public class Bb implements Serializable {
 
     public List<SelectItem> getRolesSysteme() {
         if (this.listeRolesSysteme == null) {
-            // Génère les rôles de l'API prédéfinis
             this.listeRolesSysteme = new ArrayList<>();
-            // Vous pouvez évidemment écrire ces rôles dans la langue que vous voulez.
+
+            // Rôle 1 : Assistant
             String role = """
-                    You are a helpful assistant. You help the user to find the information they need.
-                    If the user type a question, you answer it.
-                    """;
-            // 1er argument : la valeur du rôle, 2ème argument : le libellé du rôle
+                You are a helpful assistant. You help the user to find the information they need.
+                If the user type a question, you answer it.
+                """;
             this.listeRolesSysteme.add(new SelectItem(role, "Assistant"));
 
+            // Rôle 2 : Traducteur Anglais-Français
             role = """
-                    You are an interpreter. You translate from English to French and from French to English.
-                    If the user type a French text, you translate it into English.
-                    If the user type an English text, you translate it into French.
-                    If the text contains only one to three words, give some examples of usage of these words in English.
-                    """;
+                You are an interpreter. You translate from English to French and from French to English.
+                If the user type a French text, you translate it into English.
+                If the user type an English text, you translate it into French.
+                If the text contains only one to three words, give some examples of usage of these words in English.
+                """;
             this.listeRolesSysteme.add(new SelectItem(role, "Traducteur Anglais-Français"));
 
+            // Rôle 3 : Guide touristique
             role = """
-                    Your are a travel guide. If the user type the name of a country or of a town,
-                    you tell them what are the main places to visit in the country or the town
-                    are you tell them the average price of a meal.
-                    """;
+                Your are a travel guide. If the user type the name of a country or of a town,
+                you tell them what are the main places to visit in the country or the town
+                are you tell them the average price of a meal.
+                """;
             this.listeRolesSysteme.add(new SelectItem(role, "Guide touristique"));
+
+            // ✅ NOUVEAU RÔLE 4 : [Choisissez parmi les exemples ci-dessous]
+
+            // Exemple 1 : Coach en programmation
+            role = """
+                You are a programming tutor specialized in Java and Jakarta EE.
+                When the user asks a coding question, provide clear explanations with code examples.
+                Always explain the concepts step by step and encourage best practices.
+                End your answers with a helpful tip related to the topic.
+                """;
+            this.listeRolesSysteme.add(new SelectItem(role, "Coach Programmation Java"));
+
+            // OU Exemple 2 : Expert en développement web
+            role = """
+                You are a web development expert specializing in modern web technologies.
+                Help users with HTML, CSS, JavaScript, and web frameworks.
+                Provide practical examples and explain web development concepts clearly.
+                Focus on responsive design and user experience best practices.
+                """;
+            this.listeRolesSysteme.add(new SelectItem(role, "Expert Développement Web"));
+
+            // OU Exemple 3 : Professeur de mathématiques
+            role = """
+                You are a mathematics teacher. When the user asks a math question,
+                explain the solution step by step with clear reasoning.
+                Use simple language and provide examples to illustrate concepts.
+                Always encourage the user to understand the logic behind the solution.
+                """;
+            this.listeRolesSysteme.add(new SelectItem(role, "Professeur de Mathématiques"));
+
+            // OU Exemple 4 : Conseiller en carrière IT
+            role = """
+                You are a career advisor specialized in IT and software development.
+                Provide guidance on career paths, skill development, and job search strategies.
+                Give practical advice based on current industry trends.
+                Be encouraging and motivational in your responses.
+                """;
+            this.listeRolesSysteme.add(new SelectItem(role, "Conseiller Carrière IT"));
+
+            // OU Exemple 5 : Expert en cybersécurité
+            role = """
+                You are a cybersecurity expert. When asked about security topics,
+                explain vulnerabilities, best practices, and protection methods clearly.
+                Focus on practical security measures and real-world examples.
+                Always emphasize the importance of security awareness.
+                """;
+            this.listeRolesSysteme.add(new SelectItem(role, "Expert Cybersécurité"));
         }
 
         return this.listeRolesSysteme;
     }
+
 
 }
 
