@@ -7,6 +7,8 @@ import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import ma.emsi.mouhssine.tp1_mouhssine.model.LlmInteraction;
+import ma.emsi.mouhssine.tp1_mouhssine.util.JsonUtilPourGemini;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -65,6 +67,8 @@ public class Bb implements Serializable {
     @Inject
     private FacesContext facesContext;
 
+    @Inject
+    private JsonUtilPourGemini jsonUtil;
     /**
      * Obligatoire pour un bean CDI (classe gérée par CDI), s'il y a un autre constructeur.
      */
@@ -150,26 +154,35 @@ public class Bb implements Serializable {
      */
     public String envoyer() {
         if (question == null || question.isBlank()) {
-            // Erreur ! Le formulaire va être réaffiché en réponse à la requête POST, avec un message d'erreur.
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Texte question vide", "Il manque le texte de la question");
             facesContext.addMessage(null, message);
             return null;
         }
-        // Entourer la réponse avec "||".
-        this.reponse = "||";
-        // Si la conversation n'a pas encore commencé, ajouter le rôle système au début de la réponse
+
+        // Si début conversation, envoyer rôle système
         if (this.conversation.isEmpty()) {
-            // Ajouter le rôle système au début de la réponse
-            this.reponse += roleSysteme.toUpperCase(Locale.FRENCH) + "\n";
-            // Invalide le bouton pour changer le rôle système
+            jsonUtil.setRoleSysteme(roleSysteme);
             this.roleSystemeChangeable = false;
         }
-        this.reponse += question.toLowerCase(Locale.FRENCH) + "||";
-        // La conversation contient l'historique des questions-réponses depuis le début.
+
+        try {
+            LlmInteraction interaction = jsonUtil.envoyerRequete(question);
+            this.reponse = interaction.reponseExtraite();
+            this.texteRequeteJson = interaction.questionJson();
+            this.texteReponseJson = interaction.reponseJson();
+        } catch (Exception e) {
+            FacesMessage message =
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Problème de connexion avec l'API du LLM",
+                            "Problème de connexion avec l'API du LLM" + e.getMessage());
+            facesContext.addMessage(null, message);
+        }
+
         afficherConversation();
         return null;
     }
+
 
     /**
      * Pour un nouveau chat.
@@ -181,6 +194,7 @@ public class Bb implements Serializable {
      * @return "index"
      */
     public String nouveauChat() {
+        jsonUtil.reinitialiserHistorique();
         return "index";
     }
 
