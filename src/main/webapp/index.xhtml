@@ -58,6 +58,23 @@
                         <h:commandButton id="debugbutton" value="#{bb.debug?'Mode Normal':'Mode Debug'}"
                                          action="#{bb.toggleDebug()}"/>
                     </h:panelGrid>
+                    <!-- Panel debug (affiché uniquement en mode debug) -->
+                    <h:panelGrid id="debug" columns="1" rendered="#{bb.debug}">
+                        <h:panelGroup>
+                            <h:outputText value="Requête JSON :"/>
+                            <button type="button" onclick="copyToClipboard('requetejson')">Copier requête JSON</button>
+                        </h:panelGroup>
+                        <h:inputTextarea id="requetejson" value="#{bb.texteRequeteJson}"
+                                         title="Requête JSON" cols="50" rows="10" readonly="true"/>
+
+                        <h:panelGroup>
+                            <h:outputText value="Réponse JSON :"/>
+                            <button type="button" onclick="copyToClipboard('reponsejson')">Copier réponse JSON</button>
+                        </h:panelGroup>
+                        <h:inputTextarea id="reponsejson" value="#{bb.texteReponseJson}"
+                                         title="Réponse JSON" cols="50" rows="10" readonly="true"/>
+                    </h:panelGrid>
+
 
                 </h:panelGrid>
                 <h:panelGrid id="paneldroit" columns="1" style="vertical-align: top;">

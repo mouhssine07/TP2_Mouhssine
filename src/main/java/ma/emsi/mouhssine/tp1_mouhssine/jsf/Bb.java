@@ -13,7 +13,6 @@ import ma.emsi.mouhssine.tp1_mouhssine.util.JsonUtilPourGemini;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Backing bean pour la page JSF index.xhtml.
@@ -162,7 +161,7 @@ public class Bb implements Serializable {
 
         // Si début conversation, envoyer rôle système
         if (this.conversation.isEmpty()) {
-            jsonUtil.setRoleSysteme(roleSysteme);
+            jsonUtil.setSystemRole(roleSysteme);  // ✅ CORRECTION : setSystemRole au lieu de setRoleSysteme
             this.roleSystemeChangeable = false;
         }
 
@@ -171,17 +170,20 @@ public class Bb implements Serializable {
             this.reponse = interaction.reponseExtraite();
             this.texteRequeteJson = interaction.questionJson();
             this.texteReponseJson = interaction.reponseJson();
+
+            // ✅ CORRECTION : Afficher conversation APRÈS avoir reçu la réponse
+            afficherConversation();
+
         } catch (Exception e) {
-            FacesMessage message =
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Problème de connexion avec l'API du LLM",
-                            "Problème de connexion avec l'API du LLM" + e.getMessage());
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Problème de connexion avec l'API du LLM",
+                    "Problème de connexion avec l'API du LLM : " + e.getMessage());
             facesContext.addMessage(null, message);
         }
 
-        afficherConversation();
         return null;
     }
+
 
 
     /**

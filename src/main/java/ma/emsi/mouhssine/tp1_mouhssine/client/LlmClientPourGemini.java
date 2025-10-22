@@ -1,48 +1,48 @@
 package ma.emsi.mouhssine.tp1_mouhssine.client;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import ma.emsi.mouhssine.tp1_mouhssine.exception.RequeteException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.ws.rs.client.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.io.Serializable;
 
-@ApplicationScoped
-public class LlmClientPourGemini {
-
-    private final String apiKey;
-    private final HttpClient httpClient;
+@Dependent
+public class LlmClientPourGemini implements Serializable {
+    private final String key;
+    private Client clientRest;
+    private final WebTarget target;
 
     public LlmClientPourGemini() {
-        // À COMPLÉTER : Récupérer la clé depuis variable d'environnement GEMINI_API_KEY
-        this.apiKey = System.getenv("GEMINI_API_KEY");
-        this.httpClient = HttpClient.newHttpClient();
+        // Récupérer la clé depuis la variable d'environnement
+        this.key = System.getenv("GEMINI_API_KEY");
+
+        // ✅ AJOUT : Vérification et log
+        if (this.key == null || this.key.isEmpty()) {
+            System.err.println("❌ ERREUR : La variable d'environnement GEMINI_API_KEY n'est pas définie !");
+            throw new IllegalStateException("GEMINI_API_KEY non définie");
+        }
+
+        // ✅ AJOUT : Log pour vérifier (masquer une partie de la clé pour sécurité)
+        System.out.println("✅ Clé API chargée : " + this.key.substring(0, Math.min(10, this.key.length())) + "...");
+
+        this.clientRest = ClientBuilder.newClient();
+
+        // Construire l'URL complète avec la clé
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=" + this.key;
+
+        // ✅ AJOUT : Log de l'URL (masquer la clé)
+        System.out.println("✅ URL cible : " + url.substring(0, url.indexOf("?key=") + 10) + "...");
+
+        this.target = clientRest.target(url);
     }
 
-    public String envoyerRequete(String jsonRequete) throws RequeteException {
-        try {
-            // À COMPLÉTER : Construire l'URL avec la clé API
-            String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=" + apiKey;
+    public Response envoyerRequete(Entity requestEntity) {
+        Invocation.Builder request = target.request(MediaType.APPLICATION_JSON_TYPE);
+        return request.post(requestEntity);
+    }
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonRequete))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() != 200) {
-                throw new RequeteException("Erreur HTTP " + response.statusCode());
-            }
-
-            return response.body();
-
-        } catch (IOException | InterruptedException e) {
-            throw new RequeteException("Erreur connexion", e);
-        }
+    public void closeClient() {
+        this.clientRest.close();
     }
 }
