@@ -42,6 +42,13 @@
             <version>15.0.7</version>
             <classifier>jakarta</classifier>
         </dependency>
+ <!-- LangChain4j dependency  -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-open-ai</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+
         <!-- Google Gemini API -->
         <dependency>
             <groupId>com.google.genai</groupId>
