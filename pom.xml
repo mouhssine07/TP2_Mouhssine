@@ -49,12 +49,22 @@
             <version>1.7.1</version>
         </dependency>
 
+        <!-- LangChain4j Easy RAG -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-easy-rag</artifactId>
+            <version>1.7.1-beta14</version>
+        </dependency>
+
         <!-- Google Gemini API -->
         <dependency>
             <groupId>com.google.genai</groupId>
             <artifactId>google-genai</artifactId>
             <version>1.22.0</version>
         </dependency>
+
+
+
 
         <!-- langchain4j-google-ai-gemini -->
         <dependency>
