@@ -25,14 +25,14 @@ public class Test4 {
 
     public static void main(String[] args) {
 
-        // 🔑 1. Récupération de la clé API Gemini depuis les variables d’environnement
+        // 1. Récupération de la clé API Gemini depuis les variables d’environnement
         String llmKey = System.getenv("GEMINI_API_KEY");
         if (llmKey == null) {
-            System.err.println("⚠️ Erreur : variable d'environnement GEMINI_API_KEY non définie !");
+            System.err.println(" Erreur : variable d'environnement GEMINI_API_KEY non définie !");
             return;
         }
 
-        // 🤖 2. Création du modèle LLM (Gemini)
+        // 2. Création du modèle LLM (Gemini)
         ChatModel model = GoogleAiGeminiChatModel.builder()
                 .apiKey(llmKey)
                 .modelName("gemini-2.5-flash") // modèle rapide et récent
@@ -40,29 +40,29 @@ public class Test4 {
                 .maxOutputTokens(512)          // limite du nombre de tokens générés
                 .build();
 
-        // 📄 3. Chargement du document texte (infos.txt)
+        // 3. Chargement du document texte (infos.txt)
         String nomDocument = "infos.txt"; // doit être à la racine du projet
         Document document = FileSystemDocumentLoader.loadDocument(nomDocument);
 
-        // 🧠 4. Création d’une base vectorielle en mémoire
+        // 4. Création d’une base vectorielle en mémoire
         EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
 
-        // 🧩 5. Calcul des embeddings et ajout au store
+        // 5. Calcul des embeddings et ajout au store
         EmbeddingStoreIngestor.ingest(document, embeddingStore);
 
-        // 💬 6. Création de l’assistant conversationnel (avec mémoire + RAG)
+        // 6. Création de l’assistant conversationnel (avec mémoire + RAG)
         Assistant assistant = AiServices.builder(Assistant.class)
                 .chatModel(model)
                 .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore))
                 .build();
 
-        // ❓ 7. Question à poser au LLM
+        // 7. Question à poser au LLM
         String question = "Comment s'appelle le chat de Pierre ?";
         String question1 = "Pierre appelle son chat. Qu'est-ce qu'il pourrait dire ?";
         String question2 = "Quelle est la capitale de la France ?";
 
-        // 💡 8. Récupération et affichage de la réponse
+        // 8. Récupération et affichage de la réponse
         String reponse = assistant.chat(question);
         System.out.println("Question : " + question);
         System.out.println("Réponse  : " + reponse);
