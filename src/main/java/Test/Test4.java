@@ -1,5 +1,6 @@
 package Test;
 
+
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.segment.TextSegment;
@@ -11,10 +12,6 @@ import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 public class Test4 {
 
@@ -28,7 +25,7 @@ public class Test4 {
         // 1. Récupération de la clé API Gemini depuis les variables d’environnement
         String llmKey = System.getenv("GEMINI_API_KEY");
         if (llmKey == null) {
-            System.err.println(" Erreur : variable d'environnement GEMINI_API_KEY non définie !");
+            System.err.println("GEMINIKEY non définie !");
             return;
         }
 
@@ -51,11 +48,12 @@ public class Test4 {
         EmbeddingStoreIngestor.ingest(document, embeddingStore);
 
         // 6. Création de l’assistant conversationnel (avec mémoire + RAG)
-        Assistant assistant = AiServices.builder(Assistant.class)
-                .chatModel(model)
-                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
-                .contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore))
-                .build();
+        Assistant assistant =
+                AiServices.builder(Assistant.class)
+                        .chatModel(model)
+                        .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
+                        .contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore))
+                        .build();
 
         // 7. Question à poser au LLM
         String question = "Comment s'appelle le chat de Pierre ?";
