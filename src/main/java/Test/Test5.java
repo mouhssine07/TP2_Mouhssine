@@ -74,7 +74,7 @@ public class Test5 {
                 }
                 System.out.println("==================================================");
                 if ("fin".equalsIgnoreCase(question)) {
-                    System.out.println("Conversation terminée. 👋");
+                    System.out.println("Conversation terminée.");
                     break;
                 }
                 try {
