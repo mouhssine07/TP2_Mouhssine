@@ -41,7 +41,6 @@ public class Test5 {
             System.out.println("Document chargé avec succès");
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement du document: " + e.getMessage());
-            e.printStackTrace();
             return;
         }
 
@@ -52,7 +51,6 @@ public class Test5 {
             System.out.println("Document ingéré dans le embedding store");
         } catch (Exception e) {
             System.err.println("Erreur lors de l'ingestion du document: " + e.getMessage());
-            e.printStackTrace();
             return;
         }
 
